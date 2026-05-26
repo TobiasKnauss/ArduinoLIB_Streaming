@@ -30,6 +30,16 @@ public:
     expect(reinterpret_cast<const char *>(expected));
   }
 
+  void expectBytes(const char *expected, size_t length) {
+    std::string expected_bytes(expected, length);
+    if (buffer_ != expected_bytes) {
+      fprintf(stderr, "Expected %zu bytes but got %zu bytes\n",
+              expected_bytes.size(), buffer_.size());
+    }
+    assert(buffer_ == expected_bytes);
+    reset();
+  }
+
 private:
   std::string buffer_;
 };
@@ -60,6 +70,8 @@ int main() {
 
   AssertPrint out;
   const char abc[] = "abc";
+  const char raw[] = {'A', 'B', '\0', 'C', 'D'};
+  const uint8_t bytes[] = {'x', 'y', 'z'};
   double v = 1.23456789012345;
 
   out << 1;
@@ -114,6 +126,17 @@ int main() {
   out.expect("1111");
   out << _BYTE(64);
   out.expect("@");
+
+  out << _BYTES(raw, sizeof(raw));
+  out.expectBytes(raw, sizeof(raw));
+  out << _BYTES(raw + 3, 2);
+  out.expect("CD");
+  out << _BYTES(bytes, 2);
+  out.expect("xy");
+  out << _WIDTH(_BYTES(raw + 3, 2), 5);
+  out.expect("   CD");
+  out << _BYTES(static_cast<const char *>(0), 4);
+  out.expect("");
 
   out << _FLOAT(v, 1);
   out.expect("1.2");

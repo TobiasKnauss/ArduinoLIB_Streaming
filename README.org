@@ -8,10 +8,10 @@
 
 * Library Information
 - Name :: Streaming
-- Version :: 6.2.4
+- Version :: 6.3.0
 - License :: GNU LGPL 2.1 or later
 - URL :: https://github.com/janelia-arduino/Streaming
-- Authors :: Mikal Hart, gazoodle, victorh800, sebdelsol, Peter Polidoro
+- Authors :: Mikal Hart, gazoodle, victorh800, sebdelsol, TobiasKnauss, Peter Polidoro
 - Maintainer :: Peter Polidoro
 - Email :: peter@polidoro.io
 
@@ -20,7 +20,7 @@
 Header-only Arduino streaming helpers for =Print=-derived outputs such as
 =Serial=. The library adds C++-style =<<= output plus helper wrappers for base
 conversion, padding, width control, float formatting, lightweight format-string
-replacement, and comma-separated values.
+replacement, length-limited byte buffers, and comma-separated values.
 
 See [[./CHANGELOG.md][CHANGELOG.md]] for recent repository and workflow updates.
 
@@ -50,6 +50,7 @@ Available helpers:
 - =_HEX(value)=
 - =_OCT(value)=
 - =_BYTE(value)=
+- =_BYTES(buffer, length)=
 - =_FLOAT(value, digits)=
 - =_PAD(width, fill)=
 - =_WIDTH(value, width)=
@@ -65,6 +66,7 @@ const int lettera = 'A';
 const int month = 4, day = 17, year = 2009;
 const int hour = 8, minute = 20, second = 3;
 const float pi = 3.14159;
+const char raw_status[] = {'O', 'K', '!'};
 
 Serial << "This is an example of the new streaming" << endl;
 Serial << "library.  This allows you to print variables" << endl;
@@ -93,6 +95,7 @@ Serial << _FMT(F("To reduce your % size, these % can be in %"), F("sketch"),
 Serial << endl;
 
 Serial << "pi to 3 digits = " << _FLOAT(pi, 3) << endl;
+Serial << "status = " << _BYTES(raw_status, sizeof(raw_status)) << endl;
 
 // comma separator
 int f = 11;
@@ -135,7 +138,7 @@ pixi run build examples/StreamingExample uno
 pixi run build examples/FormattingHelpers teensy41
 pixi run upload examples/StreamingExample teensy41 /dev/ttyACM0
 pixi run monitor /dev/ttyACM0 115200
-pixi run set-version -- 6.2.3
+pixi run set-version -- 6.3.0
 #+END_SRC
 
 Equivalent direct commands without Pixi:

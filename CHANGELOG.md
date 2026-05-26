@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.3.0
+
+- Add `_BYTES(buffer, length)` for length-limited streaming of byte buffers,
+  including unterminated char arrays and buffer slices.
+- Add native and Arduino example test coverage for `_BYTES`.
+
 ## 6.2.3
 
 - Add a native host test target so core formatting behavior can be checked without hardware.

@@ -153,6 +153,28 @@ inline Print &operator<<(Print &obj, const _BASED<T> &arg) {
   return obj;
 }
 
+// Specialization for length-limited byte buffers, including unterminated char
+// arrays and buffer slices.
+struct _BYTES {
+  const uint8_t *buffer;
+  size_t length;
+  _BYTES(const uint8_t *b, size_t l) : buffer(b), length(l) {}
+  _BYTES(const char *b, size_t l)
+      : buffer(reinterpret_cast<const uint8_t *>(b)), length(l) {}
+};
+
+inline Print &operator<<(Print &obj, const _BYTES &arg) {
+  if (arg.buffer == 0)
+    return obj;
+#if defined(ARDUINO) && ARDUINO >= 100
+  obj.write(arg.buffer, arg.length);
+#else
+  for (size_t i = 0; i < arg.length; i++)
+    obj.write(arg.buffer[i]);
+#endif
+  return obj;
+}
+
 #if ARDUINO >= 18
 // Specialization for class _FLOAT
 // Thanks to Michael Margolis for suggesting a way
@@ -286,6 +308,8 @@ template <typename T> inline uint8_t get_value_width(T val) {
 }
 
 inline uint8_t get_value_width(const char *val) { return strlen(val); }
+
+inline uint8_t get_value_width(const _BYTES &val) { return val.length; }
 
 #ifdef ARDUINO
 inline uint8_t get_value_width(const __FlashStringHelper *val) {

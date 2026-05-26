@@ -94,6 +94,8 @@ void loop() {
   Assert.reset();
 
   const char abc[] = "abc";
+  const char raw[] = {'A', 'B', 'C'};
+  const uint8_t bytes[] = {'x', 'y', 'z'};
   //
   //  Start by testing that simple types all function correctly
   //  using the generic template
@@ -144,6 +146,10 @@ void loop() {
   Assert << _OCT(15) == F("17");
   Assert << _BIN(15) == F("1111");
   Assert << _BYTE(64) == F("@");
+  Assert << _BYTES(raw, sizeof(raw)) == F("ABC");
+  Assert << _BYTES(raw + 1, 2) == F("BC");
+  Assert << _BYTES(bytes, 2) == F("xy");
+  Assert << _WIDTH(_BYTES(raw + 1, 2), 5) == F("   BC");
 
   //
   //  _FLOAT

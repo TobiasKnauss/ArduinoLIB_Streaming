@@ -6,6 +6,7 @@ const int lettera = 'A';
 const int month = 4, day = 17, year = 2009;
 const int hour = 8, minute = 20, second = 3;
 const float pi = 3.14159;
+const char raw_status[] = {'O', 'K', '!'};
 
 const long LOOP_DELAY = 1000;
 
@@ -39,6 +40,7 @@ void loop() {
   Serial << endl;
 
   Serial << "pi to 3 digits = " << _FLOAT(pi, 3) << endl;
+  Serial << "status = " << _BYTES(raw_status, sizeof(raw_status)) << endl;
 
   // comma separator
   int f = 11;
